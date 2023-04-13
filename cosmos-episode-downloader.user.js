@@ -3,7 +3,7 @@
 // @namespace    https://github.com/LGiki/cosmos-episode-downloader-userscript
 // @homepageURL  https://github.com/LGiki/cosmos-episode-downloader-userscript
 // @supportURL   https://github.com/LGiki/cosmos-episode-downloader-userscript/issues
-// @version      1.0.0
+// @version      1.0.1
 // @description  为小宇宙单集页面增加下载按钮
 // @author       LGiki
 // @updateURL    https://github.com/LGiki/cosmos-episode-downloader-userscript/raw/main/cosmos-episode-downloader.meta.js
@@ -11,8 +11,8 @@
 // @match        https://www.xiaoyuzhoufm.com/episode/*
 // @match        https://www.xiaoyuzhoufm.com/podcast/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=xiaoyuzhoufm.com
-// @grant        none
 // @license      MIT
+// @grant        GM_download
 // ==/UserScript==
 
 const isValidXiaoyuzhouEpisodeUrl = (url) => {
@@ -37,14 +37,41 @@ const generateDownloadButton = () => {
         const downloadButtonContainer = document.createElement('div');
         downloadButtonContainer.style.cssText = 'display: flex; justify-content: center; margin: 5px 0;';
         downloadButtonContainer.id = 'cosmos-download-button-container';
-        const downloadButton = document.createElement('a');
+        const downloadButton = document.createElement('button');
         downloadButton.style.cssText = 'color: white; cursor: pointer;font-size: 13px; display:flex; align-items:center; justify-content:center; border-radius: 2px;font-size: 13px; padding: 9px; background:linear-gradient(180deg,hsla(var(--theme-color-hsl),1)0%,hsla(var(--theme-color-hsl),.8)100%);border: 1px solid rgba(0,0,0,.1);';
         downloadButton.innerHTML = '📥 下载播客音频';
-        downloadButton.href = audioUrl;
-        downloadButton.target = '_blank';
         const downloadFilename = generateDownloadFilename(audioUrl);
         if (downloadFilename) {
             downloadButton.download = downloadFilename;
+        }
+        downloadButton.onclick = () => {
+            downloadButton.disabled = true
+            GM_download({
+                url: audioUrl, 
+                name: downloadFilename,
+                onload: () => {
+                    downloadButton.innerHTML = '✔️ 下载完成'
+                    downloadButton.disabled = false
+                },
+                onprogress: (progress) => {
+                    if (progress.total !== 0) {
+                        downloadButton.innerHTML = `🚀 下载中 (${(progress.done / progress.total * 100).toFixed(0)}%)`
+                    } else {
+                        downloadButton.innerHTML = `🚀 下载中`
+                    }
+                    downloadButton.disabled = true
+                },
+                onerror: (e) => {
+                    downloadButton.innerHTML = '😢 下载失败'
+                    downloadButton.disabled = false
+                    console.log(e)
+                },
+                ontimeout: (e) => {
+                    downloadButton.innerHTML = '😢 下载超时'
+                    downloadButton.disabled = false
+                    console.log(e)
+                }
+            })
         }
         downloadButtonContainer.appendChild(downloadButton);
         const header = document.getElementsByTagName('header')[0];
