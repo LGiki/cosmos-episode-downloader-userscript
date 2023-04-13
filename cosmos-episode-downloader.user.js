@@ -6,8 +6,8 @@
 // @version      1.0.0
 // @description  为小宇宙单集页面增加下载按钮
 // @author       LGiki
-// @updateURL    https://github.com/LGiki/cosmos-episode-downloader-userscript/raw/master/cosmos-episode-downloader.meta.js
-// @downloadURL  https://github.com/LGiki/cosmos-episode-downloader-userscript/raw/master/cosmos-episode-downloader.user.js
+// @updateURL    https://github.com/LGiki/cosmos-episode-downloader-userscript/raw/main/cosmos-episode-downloader.meta.js
+// @downloadURL  https://github.com/LGiki/cosmos-episode-downloader-userscript/raw/main/cosmos-episode-downloader.user.js
 // @match        https://www.xiaoyuzhoufm.com/episode/*
 // @match        https://www.xiaoyuzhoufm.com/podcast/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=xiaoyuzhoufm.com
