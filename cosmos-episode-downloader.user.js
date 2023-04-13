@@ -25,7 +25,8 @@ const generateDownloadFilename = (audioFileUrl) => {
     if (!audioFileExtension) {
         return null;
     }
-    const filename = document.title.split('|')[0].trim();
+    const pageTitle = document.title;
+    const filename = pageTitle.slice(0, pageTitle.lastIndexOf('|')).trim();
     return `${filename}${audioFileExtension}`;
 }
 
